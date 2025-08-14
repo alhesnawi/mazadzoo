@@ -1,0 +1,18 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- الخلفية الدائرية -->
+  <circle cx="16" cy="16" r="15" fill="#1e40af" stroke="#3b82f6" stroke-width="1"/>
+  
+  <!-- رأس الأسد المبسط -->
+  <ellipse cx="16" cy="14" rx="6" ry="5" fill="#f59e0b"/>
+  
+  <!-- العيون -->
+  <circle cx="14" cy="12" r="1" fill="#1e40af"/>
+  <circle cx="18" cy="12" r="1" fill="#1e40af"/>
+  
+  <!-- الأنف -->
+  <ellipse cx="16" cy="15" rx="1" ry="0.5" fill="#1e40af"/>
+  
+  <!-- المطرقة المبسطة -->
+  <rect x="15" y="18" width="2" height="4" fill="#6b7280"/>
+  <rect x="13" y="16" width="6" height="2" fill="#1e40af" rx="1"/>
+</svg>

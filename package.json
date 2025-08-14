@@ -1,0 +1,54 @@
+{
+  "name": "rare-animals-auction-platform",
+  "version": "1.0.0",
+  "description": "منصة مزاد الحيوانات النادرة - منصة متكاملة ومتطورة لمزادات الحيوانات النادرة",
+  "main": "index.js",
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd auction-frontend && npm run dev",
+    "dev:admin": "cd admin-dashboard && npm run dev",
+    "dev:mobile": "cd mobile-app && npm start",
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:admin\"",
+    "install:all": "npm install && cd backend && npm install && cd ../auction-frontend && npm install && cd ../admin-dashboard && npm install && cd ../mobile-app && npm install",
+    "build:frontend": "cd auction-frontend && npm run build",
+    "build:admin": "cd admin-dashboard && npm run build",
+    "build:all": "npm run build:frontend && npm run build:admin",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd auction-frontend && npm test",
+    "test:all": "npm run test:backend && npm run test:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd auction-frontend && npm run lint",
+    "lint:admin": "cd admin-dashboard && npm run lint",
+    "lint:all": "npm run lint:backend && npm run lint:frontend && npm run lint:admin",
+    "clean": "rm -rf node_modules && cd backend && rm -rf node_modules && cd ../auction-frontend && rm -rf node_modules && cd ../admin-dashboard && rm -rf node_modules && cd ../mobile-app && rm -rf node_modules",
+    "setup": "npm run install:all && echo 'Setup completed successfully!'"
+  },
+  "keywords": [
+    "auction",
+    "animals",
+    "react",
+    "nodejs",
+    "mongodb",
+    "socket.io",
+    "react-native",
+    "libya",
+    "arabic"
+  ],
+  "author": "Manus AI",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/rare-animals-auction.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/rare-animals-auction/issues"
+  },
+  "homepage": "https://github.com/your-username/rare-animals-auction#readme"
+}

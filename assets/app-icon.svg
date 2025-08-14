@@ -1,0 +1,71 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- الخلفية المربعة مع زوايا مدورة -->
+  <rect width="192" height="192" rx="32" fill="url(#gradient-bg)"/>
+  
+  <!-- الحدود -->
+  <rect width="192" height="192" rx="32" stroke="#1e40af" stroke-width="4"/>
+  
+  <!-- رأس الأسد -->
+  <g id="lion-head" transform="translate(96, 80)">
+    <!-- الوجه الأساسي -->
+    <ellipse cx="0" cy="0" rx="35" ry="30" fill="#f59e0b"/>
+    
+    <!-- العيون -->
+    <circle cx="-12" cy="-8" r="4" fill="#1e40af"/>
+    <circle cx="12" cy="-8" r="4" fill="#1e40af"/>
+    <circle cx="-11" cy="-9" r="1.5" fill="white"/>
+    <circle cx="11" cy="-9" r="1.5" fill="white"/>
+    
+    <!-- الأنف -->
+    <ellipse cx="0" cy="2" rx="3" ry="2" fill="#1e40af"/>
+    
+    <!-- الفم -->
+    <path d="M -6 8 Q 0 12 6 8" stroke="#1e40af" stroke-width="1.5" fill="none"/>
+    
+    <!-- اللحية المبسطة -->
+    <path d="M -15 -5 Q -25 -15 -30 -5" stroke="#f59e0b" stroke-width="2" fill="none"/>
+    <path d="M 15 -5 Q 25 -15 30 -5" stroke="#f59e0b" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- المطرقة -->
+  <g id="auction-hammer" transform="translate(96, 140)">
+    <!-- مقبض المطرقة -->
+    <rect x="-2" y="-20" width="4" height="20" fill="#6b7280" rx="1"/>
+    
+    <!-- رأس المطرقة -->
+    <rect x="-8" y="-30" width="16" height="10" fill="#1e40af" rx="2"/>
+    
+    <!-- تفاصيل المطرقة -->
+    <rect x="-6" y="-28" width="12" height="6" fill="#3b82f6" rx="1"/>
+  </g>
+  
+  <!-- الخطوط التكنولوجية -->
+  <g id="tech-lines" opacity="0.2">
+    <line x1="40" y1="40" x2="60" y2="40" stroke="#1e40af" stroke-width="1"/>
+    <line x1="132" y1="40" x2="152" y2="40" stroke="#1e40af" stroke-width="1"/>
+    <line x1="40" y1="152" x2="60" y2="152" stroke="#1e40af" stroke-width="1"/>
+    <line x1="132" y1="152" x2="152" y2="152" stroke="#1e40af" stroke-width="1"/>
+    
+    <line x1="40" y1="40" x2="40" y2="60" stroke="#1e40af" stroke-width="1"/>
+    <line x1="152" y1="40" x2="152" y2="60" stroke="#1e40af" stroke-width="1"/>
+    <line x1="40" y1="132" x2="40" y2="152" stroke="#1e40af" stroke-width="1"/>
+    <line x1="152" y1="132" x2="152" y2="152" stroke="#1e40af" stroke-width="1"/>
+  </g>
+  
+  <!-- النقاط الزخرفية -->
+  <g id="decorative-dots">
+    <circle cx="48" cy="48" r="2" fill="#f59e0b"/>
+    <circle cx="144" cy="48" r="2" fill="#f59e0b"/>
+    <circle cx="48" cy="144" r="2" fill="#f59e0b"/>
+    <circle cx="144" cy="144" r="2" fill="#f59e0b"/>
+  </g>
+  
+  <!-- التدرج اللوني للخلفية -->
+  <defs>
+    <linearGradient id="gradient-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#eff6ff;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#dbeafe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#bfdbfe;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>

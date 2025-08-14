@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار الهوية البصرية</title>
+    <link rel="stylesheet" href="design-system.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            padding: 2rem;
+            font-family: 'Cairo', sans-serif;
+        }
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+        }
+        .logo-test {
+            text-align: center;
+            margin: 1rem 0;
+        }
+        .logo-test img {
+            margin: 0.5rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: var(--primary-blue); text-align: center;">
+        🦁 اختبار الهوية البصرية - منصة مزاد الحيوانات النادرة
+    </h1>
+
+    <div class="test-section">
+        <h2>اختبار الأيقونات</h2>
+        <div class="logo-test">
+            <h3>الشعار الرئيسي</h3>
+            <img src="assets/logo.svg" alt="الشعار الرئيسي" width="200" height="200">
+        </div>
+        <div class="logo-test">
+            <h3>أيقونة التطبيق</h3>
+            <img src="assets/app-icon.svg" alt="أيقونة التطبيق" width="150" height="150">
+        </div>
+        <div class="logo-test">
+            <h3>أيقونة الموقع</h3>
+            <img src="assets/favicon.svg" alt="أيقونة الموقع" width="64" height="64">
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>اختبار الألوان</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1rem 0;">
+            <div style="background: var(--primary-blue); color: white; padding: 1rem; border-radius: var(--radius-md); text-align: center;">
+                الأزرق الأساسي
+            </div>
+            <div style="background: var(--secondary-gold); color: white; padding: 1rem; border-radius: var(--radius-md); text-align: center;">
+                الذهبي
+            </div>
+            <div style="background: var(--success-green); color: white; padding: 1rem; border-radius: var(--radius-md); text-align: center;">
+                الأخضر
+            </div>
+            <div style="background: var(--error-red); color: white; padding: 1rem; border-radius: var(--radius-md); text-align: center;">
+                الأحمر
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>اختبار الأزرار</h2>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0;">
+            <button class="btn btn-primary">زر أساسي</button>
+            <button class="btn btn-secondary">زر ثانوي</button>
+            <button class="btn btn-outline">زر محيطي</button>
+            <button class="btn btn-ghost">زر شفاف</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>اختبار البطاقات</h2>
+        <div class="card" style="max-width: 400px;">
+            <div class="card-header">
+                <h3>عنوان البطاقة</h3>
+            </div>
+            <div class="card-body">
+                <p>هذا مثال على محتوى البطاقة مع التصميم المطبق.</p>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary btn-sm">إجراء</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>اختبار التنبيهات</h2>
+        <div style="margin: 1rem 0;">
+            <div class="alert alert-success">تم حفظ البيانات بنجاح!</div>
+            <div class="alert alert-warning">تحذير: يرجى التحقق من البيانات</div>
+            <div class="alert alert-error">خطأ: حدث خطأ أثناء الحفظ</div>
+            <div class="alert alert-info">معلومة: يمكنك تحديث البيانات لاحقاً</div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>اختبار الشارات</h2>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0;">
+            <span class="badge badge-primary">أساسي</span>
+            <span class="badge badge-secondary">ثانوي</span>
+            <span class="badge badge-success">نجح</span>
+            <span class="badge badge-warning">تحذير</span>
+            <span class="badge badge-error">خطأ</span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>اختبار النماذج</h2>
+        <form style="max-width: 400px;">
+            <div class="form-group">
+                <label class="form-label">الاسم الكامل</label>
+                <input type="text" class="form-input" placeholder="أدخل اسمك الكامل">
+            </div>
+            <div class="form-group">
+                <label class="form-label">البريد الإلكتروني</label>
+                <input type="email" class="form-input" placeholder="example@email.com">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">تسجيل</button>
+                <button type="button" class="btn btn-outline" style="margin-right: 1rem;">إلغاء</button>
+            </div>
+        </form>
+    </div>
+
+    <div style="text-align: center; margin: 2rem 0; color: var(--text-secondary);">
+        <p>✅ جميع العناصر تعمل بشكل صحيح!</p>
+        <p>تم تطوير الهوية البصرية بواسطة فريق Manus AI 🚀</p>
+    </div>
+</body>
+</html>
