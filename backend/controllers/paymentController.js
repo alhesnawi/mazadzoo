@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Animal = require('../models/Animal');
 const { body, validationResult } = require('express-validator');
 const { sendResponse, sendError, getPagination, generateTransactionId } = require('../utils/helpers');
+const moamalatService = require('../services/moamalatService');
 
 // @desc    Add funds to user balance
 // @route   POST /api/payments/add-funds
@@ -29,16 +30,25 @@ const addFunds = async (req, res, next) => {
       description: 'إضافة رصيد إلى المحفظة'
     });
 
-    // In a real implementation, you would integrate with a payment gateway here
-    // For now, we'll simulate successful payment
-    payment.status = 'completed';
-    payment.gatewayTransactionId = `GATEWAY_${Date.now()}`;
-    await payment.save();
+    // Initiate payment with Moamalat
+    const paymentResult = await moamalatService.createPayment(
+      amount,
+      'LYD',
+      'إضافة رصيد إلى المحفظة',
+      payment.transactionId
+    );
 
-    // Add funds to user balance
-    const user = await User.findById(userId);
-    user.balance += amount;
-    await user.save();
+    if (!paymentResult.success) {
+      payment.status = 'failed';
+      payment.errorMessage = paymentResult.error;
+      await payment.save();
+      return sendError(res, 400, 'فشل في إنشاء طلب الدفع: ' + paymentResult.error);
+    }
+
+    // Update payment with gateway details
+    payment.gatewayTransactionId = paymentResult.transactionId;
+    payment.paymentUrl = paymentResult.paymentUrl;
+    await payment.save();
 
     await payment.populate('userId', 'username email');
 
@@ -374,6 +384,52 @@ const getPaymentStats = async (req, res, next) => {
   }
 };
 
+// @desc    Handle Moamalat payment webhook
+// @route   POST /api/payments/webhook
+// @access  Public
+const handlePaymentWebhook = async (req, res, next) => {
+  try {
+    const webhookData = req.body;
+
+    // Verify webhook with Moamalat service
+    const verification = moamalatService.handleWebhook(webhookData);
+
+    if (!verification.valid) {
+      return sendError(res, 400, 'Invalid webhook signature');
+    }
+
+    // Find and update payment
+    const payment = await Payment.findOne({
+      gatewayTransactionId: verification.transactionId
+    });
+
+    if (!payment) {
+      return sendError(res, 404, 'Payment not found');
+    }
+
+    // Update payment status based on webhook
+    if (verification.status === 'completed' && payment.status === 'pending') {
+      payment.status = 'completed';
+
+      // Add funds to user balance for deposit payments
+      if (payment.type === 'deposit') {
+        const user = await User.findById(payment.userId);
+        user.balance += payment.amount;
+        await user.save();
+      }
+    } else if (verification.status === 'failed') {
+      payment.status = 'failed';
+      payment.errorMessage = 'Payment failed';
+    }
+
+    await payment.save();
+
+    sendResponse(res, 200, true, 'Webhook processed successfully');
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Process refund (Admin only)
 // @route   POST /api/payments/:paymentId/refund
 // @access  Private (Admin)
@@ -467,6 +523,7 @@ module.exports = {
   getPaymentHistory,
   getPaymentStats,
   processRefund,
+  handlePaymentWebhook,
   addFundsValidation,
   withdrawFundsValidation,
   paymentMethodValidation

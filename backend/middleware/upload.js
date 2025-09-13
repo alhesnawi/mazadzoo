@@ -23,6 +23,8 @@ const storage = multer.diskStorage({
       uploadPath += 'certificates/';
     } else if (file.fieldname === 'profilePicture') {
       uploadPath += 'profiles/';
+    } else if (file.fieldname === 'attachments') {
+      uploadPath += 'chats/';
     } else {
       uploadPath += 'others/';
     }
@@ -68,6 +70,22 @@ const fileFilter = (req, file, cb) => {
     } else {
       cb(new Error('يُسمح فقط بملفات الصور لصورة الملف الشخصي'), false);
     }
+  } else if (file.fieldname === 'attachments') {
+    // السماح بالصور والملفات النصية والمستندات
+    const allowedTypes = [
+      'image/',
+      'application/pdf',
+      'text/',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+    
+    const isAllowed = allowedTypes.some(type => file.mimetype.startsWith(type));
+    if (isAllowed) {
+      cb(null, true);
+    } else {
+      cb(new Error('نوع الملف غير مدعوم في الدردشة'), false);
+    }
   } else {
     cb(new Error('نوع الملف غير مدعوم'), false);
   }
@@ -91,6 +109,9 @@ const uploadAnimalFiles = upload.fields([
 ]);
 
 const uploadProfilePicture = upload.single('profilePicture');
+
+// إضافة دالة رفع ملفات الدردشة
+const uploadChatFiles = upload.array('attachments', 5); // السماح برفع 5 ملفات كحد أقصى
 
 // Error handling middleware for multer
 const handleMulterError = (error, req, res, next) => {
@@ -128,6 +149,7 @@ const handleMulterError = (error, req, res, next) => {
 module.exports = {
   uploadAnimalFiles,
   uploadProfilePicture,
+  uploadChatFiles,
   handleMulterError
 };
 

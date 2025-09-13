@@ -5,6 +5,7 @@
 
 const admin = require('firebase-admin');
 const path = require('path');
+const logger = require('../../utils/logger');
 const fs = require('fs');
 const { FIREBASE_ADMIN_SDK } = require('../environment');
 
@@ -28,10 +29,13 @@ const initializeFirebaseAdmin = () => {
           credential: admin.credential.cert(serviceAccount)
         });
         
-        console.log('Firebase Admin SDK initialized from environment variable');
+        logger.info('Firebase Admin SDK initialized from environment variable');
         return firebaseApp;
       } catch (error) {
-        console.error('Error parsing Firebase Admin SDK credentials from environment variable:', error);
+      logger.error('Error parsing Firebase Admin SDK credentials from environment variable:', {
+        error: error.message,
+        stack: error.stack
+      });
       }
     }
 
@@ -43,14 +47,17 @@ const initializeFirebaseAdmin = () => {
         credential: admin.credential.cert(serviceAccountPath)
       });
       
-      console.log('Firebase Admin SDK initialized from credentials file');
+      logger.info('Firebase Admin SDK initialized from credentials file');
       return firebaseApp;
     }
 
-    console.warn('Firebase Admin SDK credentials not found. Some features may not work properly.');
+    logger.warn('Firebase Admin SDK credentials not found. Some features may not work properly.');
     return null;
   } catch (error) {
-    console.error('Error initializing Firebase Admin SDK:', error);
+    logger.error('Error initializing Firebase Admin SDK:', {
+      error: error.message,
+      stack: error.stack
+    });
     return null;
   }
 };

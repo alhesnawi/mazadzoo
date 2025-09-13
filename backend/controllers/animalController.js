@@ -155,6 +155,7 @@ const createAnimal = async (req, res, next) => {
 // @desc    Update animal listing
 // @route   PUT /api/animals/:id
 // @access  Private (Owner or Admin)
+// في دالة updateAnimal، إضافة حذف الملفات القديمة
 const updateAnimal = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -189,6 +190,16 @@ const updateAnimal = async (req, res, next) => {
       req.body.healthCertificate = req.files.healthCertificate[0].path;
     }
 
+    // حذف الملفات القديمة إذا تم رفع ملفات جديدة
+    if (req.files?.images && animal.images) {
+      animal.images.forEach(imagePath => {
+        const fullPath = path.join(__dirname, '..', imagePath);
+        if (fs.existsSync(fullPath)) {
+          fs.unlinkSync(fullPath);
+        }
+      });
+    }
+    
     const updatedAnimal = await Animal.findByIdAndUpdate(
       req.params.id,
       req.body,

@@ -1,9 +1,36 @@
 {
-  "expo": {
-    "extra": {
-      "eas": {
-        "projectId": "60d4b0ca-fb0f-4e37-8aa7-889384abba71"
-      }
-    }
-  }
+	"expo": {
+		"name": "Rare Animals Auction",
+		"slug": "rare-animals-auction",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"userInterfaceStyle": "light",
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"assetBundlePatterns": [
+			"**/*"
+		],
+		"ios": {
+			"supportsTablet": true
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"backgroundColor": "#FFFFFF"
+			},
+			"package": "com.alkifaa.mazadzoo"
+		},
+		"web": {
+			"favicon": "./assets/favicon.png"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "60d4b0ca-fb0f-4e37-8aa7-889384abba71"
+			}
+		}
+	}
 }

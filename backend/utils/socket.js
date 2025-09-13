@@ -4,6 +4,7 @@ const config = require('../config/environment');
 const User = require('../models/User');
 const Animal = require('../models/Animal');
 const Bid = require('../models/Bid');
+const logger = require('./logger');
 
 let io;
 
@@ -38,18 +39,32 @@ const initializeSocket = (server) => {
   });
 
   io.on('connection', (socket) => {
-    console.log(`User connected: ${socket.user?.username || 'Anonymous'} (${socket.id})`);
+    logger.info(`User connected: ${socket.user?.username || 'Anonymous'} (${socket.id})`, {
+      userId: socket.user?.id,
+      username: socket.user?.username,
+      socketId: socket.id
+    });
 
     // Join auction room
     socket.on('join-auction', (animalId) => {
       socket.join(`auction-${animalId}`);
-      console.log(`User ${socket.user?.username || 'Anonymous'} joined auction ${animalId}`);
+      logger.info(`User ${socket.user?.username || 'Anonymous'} joined auction ${animalId}`, {
+        userId: socket.user?.id,
+        username: socket.user?.username,
+        animalId,
+        socketId: socket.id
+      });
     });
 
     // Leave auction room
     socket.on('leave-auction', (animalId) => {
       socket.leave(`auction-${animalId}`);
-      console.log(`User ${socket.user?.username || 'Anonymous'} left auction ${animalId}`);
+      logger.info(`User ${socket.user?.username || 'Anonymous'} left auction ${animalId}`, {
+        userId: socket.user?.id,
+        username: socket.user?.username,
+        animalId,
+        socketId: socket.id
+      });
     });
 
     // Handle real-time bidding
@@ -170,8 +185,13 @@ const initializeSocket = (server) => {
         });
 
       } catch (error) {
-        console.error('Socket bid error:', error);
-        socket.emit('bid-error', { message: 'حدث خطأ أثناء المزايدة' });
+        logger.error('Socket bid error:', {
+          userId: socket.user?.id,
+          animalId: data?.animalId,
+          error: error.message,
+          stack: error.stack
+        });
+        socket.emit('bid-error', { message: 'حدث خطأ في المزايدة' });
       }
     });
 
@@ -188,13 +208,93 @@ const initializeSocket = (server) => {
           });
         }
       } catch (error) {
-        console.error('Socket time error:', error);
+        logger.error('Socket time error:', {
+          animalId,
+          error: error.message,
+          stack: error.stack
+        });
       }
+    });
+
+    // Handle chat events
+    socket.on('join-chat', (chatId) => {
+      socket.join(`chat-${chatId}`);
+      logger.info(`User ${socket.user?.username || 'Anonymous'} joined chat ${chatId}`);
+    });
+
+    socket.on('leave-chat', (chatId) => {
+      socket.leave(`chat-${chatId}`);
+      logger.info(`User ${socket.user?.username || 'Anonymous'} left chat ${chatId}`);
+    });
+
+    // Handle typing indicators
+    socket.on('typing', (data) => {
+      socket.to(`chat-${data.chatId}`).emit('user-typing', {
+        userId: socket.user?.id,
+        username: socket.user?.username,
+        chatId: data.chatId
+      });
+    });
+
+    socket.on('stop-typing', (data) => {
+      socket.to(`chat-${data.chatId}`).emit('user-stop-typing', {
+        userId: socket.user?.id,
+        chatId: data.chatId
+      });
     });
 
     // Handle disconnect
     socket.on('disconnect', () => {
-      console.log(`User disconnected: ${socket.user?.username || 'Anonymous'} (${socket.id})`);
+      logger.info(`User disconnected: ${socket.user?.username || 'Anonymous'} (${socket.id})`, {
+        userId: socket.user?.id,
+        username: socket.user?.username,
+        socketId: socket.id
+      });
+    });
+
+    // Handle sending messages
+    socket.on('send-message', async (data) => {
+      try {
+        if (!socket.user) {
+          socket.emit('message-error', { message: 'يجب تسجيل الدخول لإرسال الرسائل' });
+          return;
+        }
+
+        const { chatId, content, type = 'text', replyTo } = data;
+        
+        // Validate message data
+        if (!chatId || !content) {
+          socket.emit('message-error', { message: 'بيانات الرسالة غير مكتملة' });
+          return;
+        }
+
+        // Broadcast message to chat room
+        socket.to(`chat-${chatId}`).emit('new-message', {
+          chatId,
+          senderId: socket.user.id,
+          senderUsername: socket.user.username,
+          content,
+          type,
+          timestamp: new Date(),
+          replyTo
+        });
+
+        // Confirm message sent
+        socket.emit('message-sent', {
+          chatId,
+          content,
+          timestamp: new Date()
+        });
+
+      } catch (error) {
+        logger.error('Socket message error:', {
+          userId: socket.user?.id,
+          chatId: data?.chatId,
+          error: error.message,
+          stack: error.stack
+        });
+        socket.emit('message-error', { message: 'فشل في إرسال الرسالة' });
+      }
     });
   });
 
@@ -265,7 +365,10 @@ const initializeSocket = (server) => {
         }
       }
     } catch (error) {
-      console.error('Auction timer error:', error);
+      logger.error('Auction timer error:', {
+        error: error.message,
+        stack: error.stack
+      });
     }
   }, 10000); // Update every 10 seconds
 

@@ -211,13 +211,21 @@ print_success "تم تثبيت جميع التبعيات بنجاح!"
 print_status "التحقق من توفر المنافذ..."
 
 PORTS=(5000 5173 5174)
+PORT_CONFLICTS=false
 for port in "${PORTS[@]}"; do
     if port_in_use $port; then
-        print_warning "المنفذ $port مشغول بالفعل"
+        print_error "المنفذ $port مشغول بالفعل. يرجى إيقاف العملية التي تستخدم هذا المنفذ."
+        PORT_CONFLICTS=true
     else
         print_success "المنفذ $port متاح"
     fi
 done
+
+if [ "$PORT_CONFLICTS" = true ]; then
+    print_error "يرجى حل تعارضات المنافذ قبل المتابعة."
+    print_status "يمكنك استخدام الأمر التالي لإيقاف العمليات: lsof -ti:PORT | xargs kill"
+    exit 1
+fi
 
 # Start the application
 print_status "بدء تشغيل التطبيق..."

@@ -68,6 +68,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+  fcmToken: {
+    type: String,
+    default: null
+  },
   rating: {
     type: Number,
     default: 0,
@@ -92,6 +96,11 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: {
     type: Date,
     select: false
+  },
+  // إضافة حقل لتتبع آخر تغيير في كلمة المرور
+  passwordChangedAt: {
+    type: Date,
+    default: Date.now
   }
 }, {
   timestamps: true,
@@ -142,6 +151,38 @@ userSchema.methods.updateRating = function(newRating) {
   this.totalRatings += 1;
   this.rating = totalScore / this.totalRatings;
 };
+
+// إضافة method للتحقق من صحة الـ token
+userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return JWTTimestamp < changedTimestamp;
+  }
+  return false;
+};
+
+// إضافة دالة إنشاء رمز إعادة تعيين كلمة المرور
+userSchema.methods.createPasswordResetToken = function() {
+  const crypto = require('crypto');
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+    
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+  
+  return resetToken;
+};
+
+// إضافة index للتأكد من تفرد اسم المستخدم
+userSchema.index({ username: 1 }, { unique: true });
+userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ phoneNumber: 1 }, { unique: true });
 
 module.exports = mongoose.model('User', userSchema);
 

@@ -1,6 +1,9 @@
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
 const { createSendToken, generateOTP, formatPhoneNumber, sendResponse, sendError } = require('../utils/helpers');
+const logger = require('../utils/logger');
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 // @desc    Register user
 // @route   POST /api/auth/register
@@ -30,8 +33,21 @@ const register = async (req, res, next) => {
     const verificationCode = user.createVerificationCode();
     await user.save({ validateBeforeSave: false });
 
-    // TODO: Send SMS with verification code
-    console.log(`Verification code for ${user.phoneNumber}: ${verificationCode}`);
+    // Send SMS with verification code
+    try {
+      // In production, integrate with SMS service like Twilio, AWS SNS, or local provider
+      // For now, we'll use a mock implementation that logs in development
+      if (process.env.NODE_ENV === 'development') {
+        logger.info(`[DEV] Verification code for ${user.phoneNumber}: ${verificationCode}`);
+      } else {
+        // TODO: Replace with actual SMS service integration
+        // Example: await sendSMS(user.phoneNumber, `Your verification code is: ${verificationCode}`);
+        logger.warn('SMS service not configured for production', { phoneNumber: user.phoneNumber });
+      }
+    } catch (smsError) {
+      logger.error('Failed to send SMS:', { phoneNumber: user.phoneNumber, error: smsError.message, stack: smsError.stack });
+      // Don't fail registration if SMS fails, user can resend
+    }
 
     createSendToken(user, 201, res, 'تم إنشاء الحساب بنجاح. يرجى التحقق من رقم الهاتف');
   } catch (error) {
@@ -136,7 +152,7 @@ const resendVerification = async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
 
     // TODO: Send SMS with verification code
-    console.log(`New verification code for ${user.phoneNumber}: ${verificationCode}`);
+    logger.info(`New verification code for ${user.phoneNumber}: ${verificationCode}`, { phoneNumber: user.phoneNumber });
 
     sendResponse(res, 200, true, 'تم إرسال رمز التحقق الجديد');
   } catch (error) {
@@ -283,6 +299,117 @@ const changePasswordValidation = [
     .withMessage('كلمة المرور الجديدة يجب أن تكون 6 أحرف على الأقل')
 ];
 
+// @desc    Forgot password
+// @route   POST /api/auth/forgot-password
+// @access  Public
+const forgotPassword = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return sendError(res, 400, 'بيانات غير صحيحة', errors.array());
+    }
+
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return sendError(res, 404, 'لا يوجد مستخدم بهذا البريد الإلكتروني');
+    }
+
+    // Generate reset token
+    const resetToken = user.createPasswordResetToken();
+    await user.save({ validateBeforeSave: false });
+
+    // TODO: Send email with reset token
+    // For now, log it in development
+    if (process.env.NODE_ENV === 'development') {
+      logger.info(`[DEV] Password reset token for ${user.email}: ${resetToken}`);
+    }
+
+    sendResponse(res, 200, true, 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني');
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Reset password
+// @route   POST /api/auth/reset-password
+// @access  Public
+const resetPassword = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return sendError(res, 400, 'بيانات غير صحيحة', errors.array());
+    }
+
+    const { token, password } = req.body;
+
+    // Get user based on the token
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return sendError(res, 400, 'الرمز غير صحيح أو منتهي الصلاحية');
+    }
+
+    // Set new password
+    user.password = password;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+
+    createSendToken(user, 200, res, 'تم إعادة تعيين كلمة المرور بنجاح');
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Refresh token
+// @route   POST /api/auth/refresh
+// @access  Public
+const refreshToken = async (req, res, next) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return sendError(res, 400, 'رمز التحديث مطلوب');
+    }
+
+    // Verify refresh token
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET);
+    
+    const user = await User.findById(decoded.id);
+    if (!user || !user.isActive) {
+      return sendError(res, 401, 'رمز التحديث غير صحيح');
+    }
+
+    createSendToken(user, 200, res, 'تم تحديث الرمز بنجاح');
+  } catch (error) {
+    return sendError(res, 401, 'رمز التحديث غير صحيح');
+  }
+};
+
+// Additional validation rules
+const forgotPasswordValidation = [
+  body('email')
+    .isEmail()
+    .withMessage('البريد الإلكتروني غير صحيح')
+    .normalizeEmail
+];
+
+const resetPasswordValidation = [
+  body('token')
+    .notEmpty()
+    .withMessage('رمز إعادة التعيين مطلوب'),
+  body('password')
+    .isLength({ min: 6 })
+    .withMessage('كلمة المرور يجب أن تكون 6 أحرف على الأقل')
+];
+
 module.exports = {
   register,
   login,
@@ -291,9 +418,14 @@ module.exports = {
   getMe,
   updateProfile,
   changePassword,
+  forgotPassword,
+  resetPassword,
+  refreshToken,
   registerValidation,
   loginValidation,
   updateProfileValidation,
-  changePasswordValidation
+  changePasswordValidation,
+  forgotPasswordValidation,
+  resetPasswordValidation
 };
 

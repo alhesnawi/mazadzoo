@@ -4,6 +4,7 @@
  */
 
 const { getAuth, getFirestore, getMessaging } = require('../config/firebase/admin');
+const logger = require('../utils/logger');
 
 /**
  * Firebase Authentication Service
@@ -21,7 +22,7 @@ const authService = {
       
       return await auth.verifyIdToken(idToken);
     } catch (error) {
-      console.error('Error verifying Firebase ID token:', error);
+      logger.error('Error verifying Firebase ID token:', { error: error.message, stack: error.stack });
       throw error;
     }
   },
@@ -38,7 +39,7 @@ const authService = {
       
       return await auth.getUser(uid);
     } catch (error) {
-      console.error('Error getting user by UID:', error);
+      logger.error('Error getting user by UID:', { uid, error: error.message, stack: error.stack });
       throw error;
     }
   }
@@ -62,7 +63,7 @@ const firestoreService = {
       const doc = await firestore.collection(collection).doc(docId).get();
       return doc.exists ? doc.data() : null;
     } catch (error) {
-      console.error('Error getting Firestore document:', error);
+      logger.error('Error getting Firestore document:', { collection, docId, error: error.message, stack: error.stack });
       throw error;
     }
   },
@@ -81,7 +82,7 @@ const firestoreService = {
       const docRef = await firestore.collection(collection).add(data);
       return docRef.id;
     } catch (error) {
-      console.error('Error adding Firestore document:', error);
+      logger.error('Error adding Firestore document:', { collection, error: error.message, stack: error.stack });
       throw error;
     }
   }
@@ -107,7 +108,7 @@ const messagingService = {
         notification
       });
     } catch (error) {
-      console.error('Error sending notification to device:', error);
+      logger.error('Error sending notification to device:', { token, error: error.message, stack: error.stack });
       throw error;
     }
   },
@@ -128,7 +129,7 @@ const messagingService = {
         notification
       });
     } catch (error) {
-      console.error('Error sending notification to devices:', error);
+      logger.error('Error sending notification to devices:', { tokensCount: tokens.length, error: error.message, stack: error.stack });
       throw error;
     }
   }

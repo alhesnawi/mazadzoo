@@ -1,317 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الهوية البصرية - منصة مزاد الحيوانات النادرة</title>
-    <link rel="stylesheet" href="design-system.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .showcase-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: var(--spacing-xl);
-        }
-        
-        .brand-section {
-            margin-bottom: var(--spacing-4xl);
-        }
-        
-        .logo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--spacing-xl);
-            margin: var(--spacing-xl) 0;
-        }
-        
-        .logo-item {
-            text-align: center;
-            padding: var(--spacing-lg);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            background: var(--bg-primary);
-        }
-        
-        .logo-item img {
-            max-width: 100%;
-            height: auto;
-        }
-        
-        .color-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: var(--spacing-lg);
-            margin: var(--spacing-xl) 0;
-        }
-        
-        .color-item {
-            text-align: center;
-            padding: var(--spacing-lg);
-            border-radius: var(--radius-lg);
-            color: white;
-            font-weight: var(--font-medium);
-        }
-        
-        .typography-example {
-            margin: var(--spacing-lg) 0;
-            padding: var(--spacing-lg);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            background: var(--bg-secondary);
-        }
-        
-        .component-showcase {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--spacing-xl);
-            margin: var(--spacing-xl) 0;
-        }
-        
-        .component-card {
-            padding: var(--spacing-lg);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            background: var(--bg-primary);
-        }
-    </style>
-</head>
-<body>
-    <div class="showcase-container">
-        <header class="brand-section">
-            <h1 class="text-4xl font-bold text-center" style="color: var(--primary-blue);">
-                🦁 الهوية البصرية - منصة مزاد الحيوانات النادرة
-            </h1>
-            <p class="text-center text-lg" style="color: var(--text-secondary); margin-top: var(--spacing-md);">
-                نظام تصميم شامل ومتسق يعكس هوية المنصة
-            </p>
-        </header>
-
-        <!-- الشعارات -->
-        <section class="brand-section">
-            <h2 class="text-3xl font-semibold" style="color: var(--primary-blue);">الشعارات</h2>
-            <p style="color: var(--text-secondary);">مجموعة متنوعة من الشعارات لمختلف الاستخدامات</p>
-            
-            <div class="logo-grid">
-                <div class="logo-item">
-                    <h3>الشعار الرئيسي</h3>
-                    <img src="assets/logo.svg" alt="الشعار الرئيسي" style="width: 200px; height: 200px;">
-                    <p class="text-sm" style="color: var(--text-secondary); margin-top: var(--spacing-sm);">
-                        SVG - 512×512
-                    </p>
-                </div>
-                
-                <div class="logo-item">
-                    <h3>أيقونة التطبيق</h3>
-                    <img src="assets/app-icon.svg" alt="أيقونة التطبيق" style="width: 150px; height: 150px;">
-                    <p class="text-sm" style="color: var(--text-secondary); margin-top: var(--spacing-sm);">
-                        SVG - 192×192
-                    </p>
-                </div>
-                
-                <div class="logo-item">
-                    <h3>أيقونة الموقع</h3>
-                    <img src="assets/favicon.svg" alt="أيقونة الموقع" style="width: 64px; height: 64px;">
-                    <p class="text-sm" style="color: var(--text-secondary); margin-top: var(--spacing-sm);">
-                        SVG - 32×32
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- الألوان -->
-        <section class="brand-section">
-            <h2 class="text-3xl font-semibold" style="color: var(--primary-blue);">الألوان الأساسية</h2>
-            <p style="color: var(--text-secondary);">نظام ألوان متسق يعكس هوية المنصة</p>
-            
-            <div class="color-grid">
-                <div class="color-item" style="background: var(--primary-blue);">
-                    <h3>الأزرق الأساسي</h3>
-                    <p>#1e40af</p>
-                </div>
-                
-                <div class="color-item" style="background: var(--primary-blue-light);">
-                    <h3>الأزرق الفاتح</h3>
-                    <p>#3b82f6</p>
-                </div>
-                
-                <div class="color-item" style="background: var(--secondary-gold);">
-                    <h3>الذهبي</h3>
-                    <p>#f59e0b</p>
-                </div>
-                
-                <div class="color-item" style="background: var(--secondary-gold-light);">
-                    <h3>الذهبي الفاتح</h3>
-                    <p>#fbbf24</p>
-                </div>
-                
-                <div class="color-item" style="background: var(--success-green);">
-                    <h3>الأخضر</h3>
-                    <p>#10b981</p>
-                </div>
-                
-                <div class="color-item" style="background: var(--error-red);">
-                    <h3>الأحمر</h3>
-                    <p>#ef4444</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- الخطوط -->
-        <section class="brand-section">
-            <h2 class="text-3xl font-semibold" style="color: var(--primary-blue);">الخطوط</h2>
-            <p style="color: var(--text-secondary);">نظام خطوط متسق للقراءة الواضحة</p>
-            
-            <div class="typography-example">
-                <h1 style="font-size: var(--text-4xl); font-weight: var(--font-bold);">
-                    العنوان الرئيسي - Heading 1
-                </h1>
-                <h2 style="font-size: var(--text-3xl); font-weight: var(--font-semibold);">
-                    العنوان الثانوي - Heading 2
-                </h2>
-                <h3 style="font-size: var(--text-2xl); font-weight: var(--font-semibold);">
-                    العنوان الفرعي - Heading 3
-                </h3>
-                <p style="font-size: var(--text-base); line-height: 1.6;">
-                    النص الأساسي - هذا مثال على النص الأساسي المستخدم في المنصة. يتم استخدام خط Cairo للغة العربية لضمان القراءة الواضحة والجمالية.
-                </p>
-                <p style="font-size: var(--text-sm); color: var(--text-secondary);">
-                    النص الصغير - يستخدم للنصوص الثانوية والتعليقات
-                </p>
-            </div>
-        </section>
-
-        <!-- المكونات -->
-        <section class="brand-section">
-            <h2 class="text-3xl font-semibold" style="color: var(--primary-blue);">المكونات الأساسية</h2>
-            <p style="color: var(--text-secondary);">مجموعة من المكونات الجاهزة للاستخدام</p>
-            
-            <div class="component-showcase">
-                <div class="component-card">
-                    <h3>الأزرار</h3>
-                    <div style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
-                        <button class="btn btn-primary">زر أساسي</button>
-                        <button class="btn btn-secondary">زر ثانوي</button>
-                        <button class="btn btn-outline">زر محيطي</button>
-                        <button class="btn btn-ghost">زر شفاف</button>
-                    </div>
-                </div>
-                
-                <div class="component-card">
-                    <h3>البطاقات</h3>
-                    <div class="card" style="margin-top: var(--spacing-md);">
-                        <div class="card-header">
-                            <h4>عنوان البطاقة</h4>
-                        </div>
-                        <div class="card-body">
-                            <p>محتوى البطاقة - هذا مثال على محتوى البطاقة مع التصميم المطبق.</p>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary btn-sm">إجراء</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="component-card">
-                    <h3>التنبيهات</h3>
-                    <div style="margin-top: var(--spacing-md);">
-                        <div class="alert alert-success">
-                            تم حفظ البيانات بنجاح!
-                        </div>
-                        <div class="alert alert-warning">
-                            تحذير: يرجى التحقق من البيانات
-                        </div>
-                        <div class="alert alert-error">
-                            خطأ: حدث خطأ أثناء الحفظ
-                        </div>
-                        <div class="alert alert-info">
-                            معلومة: يمكنك تحديث البيانات لاحقاً
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="component-card">
-                    <h3>الشارات</h3>
-                    <div style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
-                        <span class="badge badge-primary">أساسي</span>
-                        <span class="badge badge-secondary">ثانوي</span>
-                        <span class="badge badge-success">نجح</span>
-                        <span class="badge badge-warning">تحذير</span>
-                        <span class="badge badge-error">خطأ</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- النماذج -->
-        <section class="brand-section">
-            <h2 class="text-3xl font-semibold" style="color: var(--primary-blue);">النماذج</h2>
-            <p style="color: var(--text-secondary);">تصميم متسق للنماذج والمدخلات</p>
-            
-            <div class="component-card" style="max-width: 500px;">
-                <form>
-                    <div class="form-group">
-                        <label class="form-label">الاسم الكامل</label>
-                        <input type="text" class="form-input" placeholder="أدخل اسمك الكامل">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">البريد الإلكتروني</label>
-                        <input type="email" class="form-input" placeholder="example@email.com">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">كلمة المرور</label>
-                        <input type="password" class="form-input" placeholder="أدخل كلمة المرور">
-                    </div>
-                    
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">تسجيل</button>
-                        <button type="button" class="btn btn-outline" style="margin-right: var(--spacing-md);">إلغاء</button>
-                    </div>
-                </form>
-            </div>
-        </section>
-
-        <!-- فلسفة العلامة التجارية -->
-        <section class="brand-section">
-            <h2 class="text-3xl font-semibold" style="color: var(--primary-blue);">فلسفة العلامة التجارية</h2>
-            
-            <div class="component-showcase">
-                <div class="component-card">
-                    <h3>🎯 الرؤية</h3>
-                    <p>منصة مزاد الحيوانات النادرة تجمع بين الأصالة والحداثة، حيث تمثل الأصالة في الاهتمام بالحيوانات النادرة والحداثة في التكنولوجيا المستخدمة.</p>
-                </div>
-                
-                <div class="component-card">
-                    <h3>💎 القيم الأساسية</h3>
-                    <ul style="margin-top: var(--spacing-md);">
-                        <li><strong>الثقة:</strong> منصة موثوقة وآمنة للمزادات</li>
-                        <li><strong>الشفافية:</strong> رسوم واضحة وعمليات شفافة</li>
-                        <li><strong>الاحترافية:</strong> خدمة عالية الجودة</li>
-                        <li><strong>الابتكار:</strong> استخدام أحدث التقنيات</li>
-                    </ul>
-                </div>
-                
-                <div class="component-card">
-                    <h3>🦁 رمزية الأيقونة</h3>
-                    <ul style="margin-top: var(--spacing-md);">
-                        <li><strong>الأسد:</strong> يمثل القوة والهيبة والحيوانات النادرة</li>
-                        <li><strong>المطرقة:</strong> يرمز إلى نظام المزادات</li>
-                        <li><strong>الدائرة:</strong> تمثل الوحدة والشمولية</li>
-                        <li><strong>الخطوط:</strong> تمثل التكنولوجيا والحداثة</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <footer class="brand-section text-center" style="border-top: 1px solid var(--border-light); padding-top: var(--spacing-xl);">
-            <p style="color: var(--text-secondary);">
-                تم تطوير هذا النظام بواسطة فريق Manus AI 🚀
-            </p>
-            <p style="color: var(--text-tertiary); font-size: var(--text-sm); margin-top: var(--spacing-sm);">
-                تاريخ التحديث: 10 أغسطس 2024
-            </p>
-        </footer>
-    </div>
-</body>
-</html>

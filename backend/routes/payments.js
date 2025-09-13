@@ -7,6 +7,7 @@ const {
   getPaymentHistory,
   getPaymentStats,
   processRefund,
+  handlePaymentWebhook,
   addFundsValidation,
   withdrawFundsValidation,
   paymentMethodValidation
@@ -15,7 +16,10 @@ const { protect, authorize } = require('../middleware/auth');
 
 const router = express.Router();
 
-// All routes are protected
+// Public webhook endpoint (no authentication required)
+router.post('/webhook', handlePaymentWebhook);
+
+// All other routes are protected
 router.use(protect);
 
 // User payment routes
