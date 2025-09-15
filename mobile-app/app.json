@@ -1,0 +1,71 @@
+{
+  "expo": {
+    "name": "Rare Animals Auction",
+    "slug": "rare-animals-auction",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "notification": {
+      "icon": "./assets/notification-icon.png",
+      "color": "#22c55e",
+      "iosDisplayInForeground": true,
+      "androidMode": "default",
+      "androidCollapsedTitle": "مزاد الحيوانات النادرة"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.alkifaa.mazadzoo",
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.CAMERA",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.VIBRATE",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.WAKE_LOCK",
+        "com.google.android.c2dm.permission.RECEIVE"
+      ],
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.alkifaa.mazadzoo",
+      "googleServicesFile": "./GoogleService-Info.plist"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "السماح للتطبيق بالوصول إلى صورك لإضافة الحيوانات",
+          "cameraPermission": "السماح للتطبيق بالوصول إلى الكاميرا لالتقاط صور الحيوانات"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "السماح للتطبيق بالوصول إلى موقعك لتحديد موقع الحيوانات"
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#22c55e",
+          "defaultChannel": "default"
+        }
+      ]
+    ]
+  }
+}

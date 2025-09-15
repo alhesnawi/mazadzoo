@@ -1,4 +1,5 @@
 #!/bin/bash
+cd "$(dirname "$0")"
 
 # Rare Animals Auction Platform - Start Script
 # منصة مزاد الحيوانات النادرة - سكريبت التشغيل
@@ -206,6 +207,19 @@ fi
 cd ..
 
 print_success "تم تثبيت جميع التبعيات بنجاح!"
+
+kill_processes_on_ports() {
+    PORTS=(5000 5173 5174)
+    for port in "${PORTS[@]}"; do
+        if lsof -i :$port >/dev/null 2>&1; then
+            print_warning "المنفذ $port مشغول. جاري إيقاف العملية..."
+            lsof -ti:$port | xargs kill -9
+            print_success "تم إيقاف العملية على المنفذ $port"
+        fi
+    done
+}
+
+kill_processes_on_ports
 
 # Check if ports are available
 print_status "التحقق من توفر المنافذ..."

@@ -1,0 +1,57 @@
+# Learn more: https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+# Native builds (keep source but ignore builds)
+# /android  # تم التعليق - نحتاج مجلد android للتطوير
+# /ios     # تم التعليق - نحتاج مجلد ios للتطوير
+android/app/build/
+android/build/
+android/.gradle/
+ios/build/
+ios/Pods/
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcodeproj/xcuserdata/
+
+# Kotlin
+.kotlin/
+*.orig.*
+
+# Certificates and keys
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.keystore
+
+# Metro
+.metro-health-check*
+
+# Debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# Environment files
+.env*.local
+.env.production
+
+# TypeScript
+*.tsbuildinfo
+
+# EAS
+.easignore
+
+# Temporary files
+*.tmp
+*.temp

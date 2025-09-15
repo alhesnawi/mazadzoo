@@ -1,0 +1,37 @@
+import { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { Button } from '@/components/ui/button.jsx'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card.jsx'
+import { Badge } from '@/components/ui/badge.jsx'
+import { Input } from '@/components/ui/input.jsx'
+import { Search, Heart, Clock, Users, Gavel, Star, Filter } from 'lucide-react'
+import { Toaster } from '@/components/ui/sonner.jsx'
+import appLogo from './assets/app_logo.png'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { AuctionProvider, useAuction } from './contexts/AuctionContext'
+import { formatCurrency, formatTimeRemaining } from './utils/helpers'
+import './App.css'
+
+import HomePage from './components/HomePage'
+
+function App() {
+
+  return (
+    <Router>
+      <AuthProvider>
+        <AuctionProvider>
+          <div className="min-h-screen bg-background" dir="rtl">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              {/* Add more routes here */}
+            </Routes>
+            <Toaster />
+          </div>
+        </AuctionProvider>
+      </AuthProvider>
+    </Router>
+  )
+}
+
+export default App
+
