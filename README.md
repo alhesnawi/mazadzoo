@@ -276,3 +276,4 @@ curl -X POST http://localhost:5000/api/auth/login \
 **تم تطوير هذا المشروع بواسطة فريق Manus AI** 🚀
 
 # NADIRH
+# mazadzoo
