@@ -51,3 +51,4 @@ build/
 # Package files
 *.tgz
 *.tar.gz
+*.env.production
