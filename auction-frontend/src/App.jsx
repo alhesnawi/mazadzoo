@@ -13,6 +13,8 @@ import { formatCurrency, formatTimeRemaining } from './utils/helpers'
 import './App.css'
 
 import HomePage from './components/HomePage'
+import LoginPage from './components/LoginPage'
+import RegisterPage from './components/RegisterPage'
 
 function App() {
 
@@ -23,7 +25,8 @@ function App() {
           <div className="min-h-screen bg-background" dir="rtl">
             <Routes>
               <Route path="/" element={<HomePage />} />
-              {/* Add more routes here */}
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
             </Routes>
             <Toaster />
           </div>

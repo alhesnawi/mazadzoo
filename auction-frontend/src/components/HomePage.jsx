@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card.jsx'
 import { Badge } from '@/components/ui/badge.jsx'
@@ -12,13 +13,13 @@ import appLogo from '../assets/app_logo.png'
 const categories = ["جميع الفئات", "طيور", "زواحف", "ثدييات", "أسماك", "حشرات"]
 
 function HomePage() {
+  const navigate = useNavigate()
   const { user, isAuthenticated, login, logout } = useAuth()
   const { animals, loading, error, searchAnimals, placeBid } = useAuction()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('جميع الفئات')
   const [bidAmount, setBidAmount] = useState('')
   const [biddingFor, setBiddingFor] = useState(null)
-  const [showLoginModal, setShowLoginModal] = useState(false)
 
 
   // Search and filter animals
@@ -58,7 +59,7 @@ function HomePage() {
 
   // Handle navigation
   const handleLogin = () => {
-    setShowLoginModal(true)
+    navigate('/login')
   }
 
   const handleLogout = () => {
@@ -123,29 +124,6 @@ function HomePage() {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
-      {/* Login Modal */}
-      {showLoginModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
-            <h3 className="text-lg font-bold mb-4">تسجيل الدخول</h3>
-            <p className="text-muted-foreground mb-4">
-              ميزة تسجيل الدخول قيد التطوير. يرجى استخدام الخادم الخلفي مباشرة.
-            </p>
-            <div className="flex gap-2">
-              <Button onClick={() => setShowLoginModal(false)} className="flex-1">
-                إغلاق
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => window.open('http://localhost:5002/api/auth/login', '_blank')}
-                className="flex-1"
-              >
-                API تسجيل الدخول
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
