@@ -32,7 +32,7 @@ const socketUtils = initializeSocket(server);
 // Security middleware
 app.use(helmet());
 
-// CORS configuration - Allow all localhost ports for development
+// CORS configuration - Allow all localhost ports for development and Replit domains
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
@@ -40,6 +40,11 @@ app.use(cors({
 
     // Allow localhost on any port for development
     if (origin.match(/^http:\/\/localhost:\d+$/)) {
+      return callback(null, true);
+    }
+
+    // Allow Replit domains
+    if (origin.match(/^https:\/\/.*\.replit\.dev$/)) {
       return callback(null, true);
     }
 

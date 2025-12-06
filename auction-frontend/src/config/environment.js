@@ -1,8 +1,8 @@
 // Environment Configuration
 export const config = {
   // API Configuration
-  API_BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:5002/api',
-  SOCKET_URL: import.meta.env.VITE_SOCKET_URL || 'http://localhost:5002',
+  API_BASE_URL: import.meta.env.VITE_API_URL || '/api',
+  SOCKET_URL: import.meta.env.VITE_SOCKET_URL || '',
   
   // App Configuration
   APP_NAME: import.meta.env.VITE_APP_NAME || 'مزاد الحيوانات النادرة',
