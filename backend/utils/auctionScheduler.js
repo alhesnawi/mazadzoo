@@ -1,6 +1,7 @@
 // ملف جديد لجدولة انتهاء المزادات
 const cron = require('node-cron');
 const Animal = require('../models/Animal');
+const logger = require('./logger');
 
 // فحص المزادات المنتهية كل دقيقة
 cron.schedule('* * * * *', async () => {
@@ -15,6 +16,6 @@ cron.schedule('* * * * *', async () => {
       await animal.save();
     }
   } catch (error) {
-    console.error('Error checking expired auctions:', error);
+    logger.error('Error checking expired auctions', { message: error.message, stack: error.stack });
   }
 });

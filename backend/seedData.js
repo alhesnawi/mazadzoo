@@ -102,7 +102,8 @@ const seedDatabase = async () => {
   try {
     // Connect to MongoDB
     await mongoose.connect(config.MONGODB_URI);
-    console.log('Connected to MongoDB');
+    const logger = require('./utils/logger');
+    logger.info('Connected to MongoDB');
 
     // Find or create an admin user
     let admin = await User.findOne({ email: 'admin@mazadzoo.com' });
@@ -117,10 +118,7 @@ const seedDatabase = async () => {
         role: 'admin',
         isVerified: true
       });
-      console.log('Created admin user');
-      console.log('Admin login credentials:');
-      console.log('Email: admin@mazadzoo.com');
-      console.log('Password: admin123');
+      logger.info('Created admin user with credentials - Email: admin@mazadzoo.com, Password: admin123');
     }
 
     // Find or create a seller user
@@ -136,12 +134,12 @@ const seedDatabase = async () => {
         role: 'seller',
         isVerified: true
       });
-      console.log('Created seller user');
+      logger.info('Created seller user');
     }
 
     // Clear existing animals
     await Animal.deleteMany({});
-    console.log('Cleared existing animals');
+    logger.info('Cleared existing animals');
 
     // Add sellerId to each animal
     const animalsWithSeller = sampleAnimals.map(animal => ({
@@ -151,19 +149,18 @@ const seedDatabase = async () => {
 
     // Insert sample animals
     const createdAnimals = await Animal.insertMany(animalsWithSeller);
-    console.log(`Created ${createdAnimals.length} sample animals`);
+    logger.info(`Created ${createdAnimals.length} sample animals`);
 
-    console.log('Database seeded successfully!');
-    console.log('Sample animals:');
+    logger.info('Database seeded successfully!');
     createdAnimals.forEach((animal, index) => {
-      console.log(`${index + 1}. ${animal.name} - ${animal.startPrice} دينار`);
+      logger.info(`${index + 1}. ${animal.name} - ${animal.startPrice} دينار`);
     });
 
   } catch (error) {
-    console.error('Error seeding database:', error);
+    logger.error('Error seeding database', { message: error.message, stack: error.stack });
   } finally {
     await mongoose.connection.close();
-    console.log('Database connection closed');
+    logger.info('Database connection closed');
   }
 };
 

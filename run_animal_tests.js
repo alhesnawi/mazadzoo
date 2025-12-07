@@ -31,9 +31,10 @@ async function request(method, path, token, body) {
 }
 
 (async () => {
-  const sellerToken = readToken('./seller_token.txt');
-  const buyerToken = readToken('./buyer_token.txt');
-  const adminToken = readToken('./admin_token.txt');
+  const path = require('path');
+  const sellerToken = readToken(path.join(__dirname, 'seller_token.txt'));
+  const buyerToken = readToken(path.join(__dirname, 'buyer_token.txt'));
+  const adminToken = readToken(path.join(__dirname, 'admin_token.txt'));
 
   console.log('Using tokens:', !!sellerToken, !!buyerToken, !!adminToken);
 

@@ -217,7 +217,7 @@ const getMe = async (req, res, next) => {
     // استخدام sendResponse للرد
     sendResponse(res, 200, true, 'تم جلب بيانات المستخدم بنجاح', { user });
   } catch (error) {
-    console.error('❌ Error in getMe function:', error);
+    logger.error('Error in getMe function', { message: error.message, stack: error.stack });
     next(error);
   }
 };

@@ -59,8 +59,7 @@ const validateEnvironment = () => {
   const missing = required.filter(key => !config[key]);
   
   if (missing.length > 0) {
-    console.error('❌ Missing required environment variables:', missing);
-    console.error('Please check your .env file and ensure all required variables are set.');
+    logger.error('Missing required environment variables', { missing });
   }
 
   return missing.length === 0;
