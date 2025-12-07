@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const Animal = require('../models/Animal');
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
@@ -169,8 +171,8 @@ const updateAnimal = async (req, res, next) => {
       return sendError(res, 404, 'الحيوان غير موجود');
     }
 
-    // Check ownership or admin
-    if (animal.sellerId.toString() !== req.user.id && req.user.role !== 'admin') {
+    // Check ownership or admin (normalize types)
+    if (String(animal.sellerId) !== String(req.user?.id) && req.user.role !== 'admin') {
       return sendError(res, 403, 'غير مصرح لك بتعديل هذا الحيوان');
     }
 
@@ -223,8 +225,8 @@ const deleteAnimal = async (req, res, next) => {
       return sendError(res, 404, 'الحيوان غير موجود');
     }
 
-    // Check ownership or admin
-    if (animal.sellerId.toString() !== req.user.id && req.user.role !== 'admin') {
+    // Check ownership or admin (normalize types)
+    if (String(animal.sellerId) !== String(req.user?.id) && req.user.role !== 'admin') {
       return sendError(res, 403, 'غير مصرح لك بحذف هذا الحيوان');
     }
 
@@ -336,6 +338,10 @@ const getWatchlist = async (req, res, next) => {
   try {
     const { page, limit } = req.query;
     const { page: pageNum, limit: limitNum, skip } = getPagination(page, limit);
+    // Guard: ensure authenticated user exists
+    if (!req.user || !req.user.id) {
+      return sendError(res, 401, 'لم يتم التعرف على المستخدم');
+    }
 
     const animals = await Animal.find({ watchlist: req.user.id })
       .populate('sellerId', 'username rating totalRatings')
