@@ -165,10 +165,59 @@ const resendVerification = async (req, res, next) => {
 // @access  Private
 const getMe = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id);
-    
+    logger.debug('getMe called', { user: req.user });
+
+    // التحقق من وجود req.user وبياناته
+    if (!req.user) {
+      logger.warn('req.user is undefined');
+      return res.status(401).json({
+        success: false,
+        message: 'لم يتم العثور على بيانات المستخدم'
+      });
+    }
+
+    // البحث عن الـ ID بجميع الطرق الممكنة
+    let userId = null;
+
+    if (req.user.id) {
+      userId = req.user.id;
+      logger.debug('Found userId from req.user.id', { userId });
+    } else if (req.user._id) {
+      userId = req.user._id;
+      logger.debug('Found userId from req.user._id', { userId });
+    } else if (req.user.userId) {
+      userId = req.user.userId;
+      logger.debug('Found userId from req.user.userId', { userId });
+    } else if (req.user.Id) {
+      userId = req.user.Id;
+      logger.debug('Found userId from req.user.Id', { userId });
+    }
+
+    if (!userId) {
+      logger.warn('No userId found in req.user object', { keys: Object.keys(req.user) });
+      return res.status(401).json({
+        success: false,
+        message: 'بيانات المستخدم غير كاملة'
+      });
+    }
+
+    // البحث عن المستخدم في قاعدة البيانات
+    const user = await User.findById(userId);
+
+    if (!user) {
+      logger.warn('User not found in database with ID', { userId });
+      return res.status(404).json({
+        success: false,
+        message: 'المستخدم غير موجود'
+      });
+    }
+
+    logger.info('User found for getMe', { email: user.email });
+
+    // استخدام sendResponse للرد
     sendResponse(res, 200, true, 'تم جلب بيانات المستخدم بنجاح', { user });
   } catch (error) {
+    console.error('❌ Error in getMe function:', error);
     next(error);
   }
 };
@@ -183,6 +232,13 @@ const updateProfile = async (req, res, next) => {
       return sendError(res, 400, 'بيانات غير صحيحة', errors.array());
     }
 
+    // 🔍 الحصول على الـ ID من req.user
+    const userId = req.user?.id || req.user?._id || req.user?.userId;
+    
+    if (!userId) {
+      return sendError(res, 401, 'بيانات المستخدم غير موجودة');
+    }
+
     const fieldsToUpdate = {
       username: req.body.username,
       address: req.body.address,
@@ -195,7 +251,7 @@ const updateProfile = async (req, res, next) => {
       fieldsToUpdate[key] === undefined && delete fieldsToUpdate[key]
     );
 
-    const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
+    const user = await User.findByIdAndUpdate(userId, fieldsToUpdate, {
       new: true,
       runValidators: true
     });
@@ -216,10 +272,17 @@ const changePassword = async (req, res, next) => {
       return sendError(res, 400, 'بيانات غير صحيحة', errors.array());
     }
 
+    // 🔍 الحصول على الـ ID من req.user
+    const userId = req.user?.id || req.user?._id || req.user?.userId;
+    
+    if (!userId) {
+      return sendError(res, 401, 'بيانات المستخدم غير موجودة');
+    }
+
     const { currentPassword, newPassword } = req.body;
 
     // Get user with password
-    const user = await User.findById(req.user.id).select('+password');
+    const user = await User.findById(userId).select('+password');
 
     // Check current password
     if (!(await user.correctPassword(currentPassword, user.password))) {
@@ -398,7 +461,7 @@ const forgotPasswordValidation = [
   body('email')
     .isEmail()
     .withMessage('البريد الإلكتروني غير صحيح')
-    .normalizeEmail
+    .normalizeEmail()
 ];
 
 const resetPasswordValidation = [
@@ -428,4 +491,3 @@ module.exports = {
   forgotPasswordValidation,
   resetPasswordValidation
 };
-

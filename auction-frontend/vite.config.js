@@ -12,17 +12,27 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5000,
+    // Use a different port than the backend to avoid clashes
+    port: 5173,
     host: true,
     allowedHosts: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        // Proxy API calls to the backend dev server
+        target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
+        // Ensure Authorization header is forwarded from the browser to the backend
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq, req, res) => {
+            if (req.headers && req.headers.authorization) {
+              proxyReq.setHeader('authorization', req.headers.authorization);
+            }
+          });
+        }
       },
       '/socket.io': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
         ws: true,

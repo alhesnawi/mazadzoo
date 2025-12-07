@@ -17,11 +17,17 @@ const getAuthHeaders = () => {
 const handleResponse = async (response) => {
   try {
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'حدث خطأ في الخادم');
     }
-    
+
+    // If the API returns a token at the top level (e.g. on login/register),
+    // include it alongside the returned data so callers can access it.
+    if (data && data.token) {
+      return Object.assign({}, data.data || {}, { token: data.token });
+    }
+
     return data.data || data;
   } catch (error) {
     if (error.name === 'SyntaxError') {

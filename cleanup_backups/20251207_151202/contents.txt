@@ -1,0 +1,20 @@
+total 96
+drwxrwxrwx+ 2 codespace codespace  4096 Dec  7 15:12 .
+drwxrwxrwx+ 3 codespace codespace  4096 Dec  7 15:12 ..
+-rw-rw-rw-  1 codespace codespace    50 Dec  7 15:12 README.txt
+-rw-rw-rw-  1 codespace codespace   185 Dec  7 15:12 admin-dashboard.log
+-rw-rw-rw-  1 codespace codespace     6 Dec  7 15:12 admin-dashboard.pid
+-rw-rw-rw-  1 codespace codespace  1939 Dec  7 15:12 auction-frontend.log
+-rw-rw-rw-  1 codespace codespace     6 Dec  7 15:12 auction-frontend.pid
+-rw-rw-rw-  1 codespace codespace 25389 Dec  7 15:12 backend.log
+-rw-rw-rw-  1 codespace codespace     6 Dec  7 15:12 backend.pid
+-rw-rw-rw-  1 codespace codespace     0 Dec  7 15:12 contents.txt
+-rw-rw-rw-  1 codespace codespace   961 Dec  7 15:12 createAdmin.log
+-rw-rw-rw-  1 codespace codespace   350 Dec  7 15:12 createAdmin2.log
+-rw-rw-rw-  1 codespace codespace   355 Dec  7 15:12 createAnimal.log
+-rw-rw-rw-  1 codespace codespace   352 Dec  7 15:12 createSeller.log
+-rw-rw-rw-  1 codespace codespace  1433 Dec  7 15:12 tmp_full_flow.js
+-rw-rw-rw-  1 codespace codespace  1433 Dec  7 15:12 tmp_full_flow_5173.js
+-rw-rw-rw-  1 codespace codespace   606 Dec  7 15:12 tmp_post.js
+-rw-rw-rw-  1 codespace codespace   606 Dec  7 15:12 tmp_post_proxy.js
+-rw-rw-rw-  1 codespace codespace   606 Dec  7 15:12 tmp_post_proxy_5173.js

@@ -6,7 +6,9 @@ const config = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   
   // Database Configuration
-  MONGODB_URI: process.env.MONGO_URI || 'mongodb://localhost:27017/rare_animals_auction',
+  MONGODB_URI: process.env.MONGODB_URI || 
+               process.env.MONGO_URI || 
+               'mongodb://localhost:27017/rare_animals_auction',
   
   // JWT Configuration
   JWT_SECRET: process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production',
@@ -57,33 +59,10 @@ const validateEnvironment = () => {
   const missing = required.filter(key => !config[key]);
   
   if (missing.length > 0) {
-    // Use console.error here since logger might not be initialized yet
     console.error('❌ Missing required environment variables:', missing);
     console.error('Please check your .env file and ensure all required variables are set.');
   }
-  
-  // Warn about optional but important variables
-  const optional = {
-    FIREBASE_ADMIN_SDK: 'Firebase functionality will be limited',
-    EMAIL_USER: 'Email notifications will not work',
-    EMAIL_PASS: 'Email notifications will not work',
-    PAYMENT_GATEWAY_KEY: 'Payment processing will not work',
-    PAYMENT_GATEWAY_SECRET: 'Payment processing will not work'
-  };
-  
-  Object.entries(optional).forEach(([key, warning]) => {
-    if (!config[key]) {
-      // Use console.warn here since this runs during module initialization
-      console.warn(`⚠️  ${key} not set: ${warning}`);
-    }
-  });
-  
-  // Security warnings
-  if (config.JWT_SECRET === 'dev_jwt_secret_key_change_in_production_with_strong_random_string') {
-    // Use console.warn here since this runs during module initialization
-    console.warn('⚠️  Using default JWT_SECRET. Change this in production!');
-  }
-  
+
   return missing.length === 0;
 };
 

@@ -9,7 +9,9 @@ const errorHandler = (err, req, res, next) => {
     stack: err.stack,
     url: req.originalUrl,
     method: req.method,
-    ip: req.ip
+    ip: req.ip,
+    // Include raw body for easier debugging of JSON parse errors in development
+    ...(req && req.rawBody ? { rawBody: req.rawBody } : {})
   });
 
   // Mongoose bad ObjectId
