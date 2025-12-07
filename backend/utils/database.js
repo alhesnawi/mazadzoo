@@ -6,7 +6,7 @@ const connectDB = async (retries = 5) => {
   const mongoURI = process.env.MONGODB_URI || process.env.MONGO_URI;
 
   if (!mongoURI) {
-    logger.error('❌ Mongo URI not found in .env file');
+    logger.error('Mongo URI not found in .env file');
     process.exit(1);
   }
 
@@ -23,7 +23,7 @@ const connectDB = async (retries = 5) => {
       useUnifiedTopology: true
     });
 
-    logger.info(`✅ MongoDB Connected: ${conn.connection.host}`, {
+    logger.info(`MongoDB Connected: ${conn.connection.host}`, {
       host: conn.connection.host,
       database: conn.connection.name
     });

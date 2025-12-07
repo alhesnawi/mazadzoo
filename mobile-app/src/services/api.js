@@ -23,7 +23,6 @@ class ApiService {
 
   async request(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
-    console.log('API Request:', url, options);
     
     const token = await this.getToken();
     
@@ -37,10 +36,8 @@ class ApiService {
   
     try {
       const response = await fetch(url, config);
-      console.log('API Response status:', response.status);
       
       const data = await response.json();
-      console.log('API Response data:', data);
   
       if (!response.ok) {
         throw new Error(data.message || 'حدث خطأ في الخادم');
@@ -48,7 +45,6 @@ class ApiService {
   
       return data.data || data;
     } catch (error) {
-      console.log('API Request error:', error);
       // If backend is not available and we're in development, use mock data
       if (USE_MOCK_DATA && (error.message === 'Network request failed' || error.name === 'TypeError')) {
         // Backend unavailable, using mock data

@@ -26,10 +26,10 @@ try {
   // تحقق من عدم تكرار التهيئة
   if (getApps().length === 0) {
     app = initializeApp(firebaseConfig);
-    console.log('✅ Firebase initialized successfully');
+    console.log('Firebase initialized successfully');
   } else {
     app = getApps()[0];
-    console.log('✅ Firebase already initialized');
+    console.log('Firebase already initialized');
   }
   
   // تهيئة خدمات Firebase
@@ -39,11 +39,11 @@ try {
   firebaseMessaging = messaging();
   
   isFirebaseEnabled = true;
-  console.log('✅ Firebase services initialized successfully');
+  console.log('Firebase services initialized successfully');
   
 } catch (error) {
-  console.warn('⚠️ Firebase initialization failed:', error.message);
-  console.warn('📱 App will run in offline/demo mode');
+  console.warn('Firebase initialization failed:', error.message);
+  console.warn('App will run in offline/demo mode');
   
   isFirebaseEnabled = false;
   
@@ -183,7 +183,7 @@ export const getFirebaseErrorMessage = (error) => {
 };
 
 // تسجيل حالة Firebase
-console.log('🔥 Firebase Status:', getFirebaseStatus());
+console.log('Firebase Status:', getFirebaseStatus());
 
 // تصدير الخدمات
 export { 
