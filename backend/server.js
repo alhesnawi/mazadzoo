@@ -46,6 +46,11 @@ app.use(cors({
       return callback(null, true);
     }
 
+    // Allow GitHub Codespaces domains
+    if (origin.match(/^https:\/\/.*\.github\.dev$/)) {
+      return callback(null, true);
+    }
+
     // Allow Replit domains
     if (origin.match(/^https:\/\/.*\.replit\.dev$/)) {
       return callback(null, true);

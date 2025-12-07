@@ -33,11 +33,17 @@ export default defineConfig({
         target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
+        rewrite: (path) => path,
         // Ensure Authorization header is forwarded from the browser to the backend
         configure: (proxy) => {
           proxy.on('proxyReq', (proxyReq, req, res) => {
             if (req.headers && req.headers.authorization) {
               proxyReq.setHeader('authorization', req.headers.authorization);
+            }
+          });
+          proxy.on('proxyRes', (proxyRes, req, res) => {
+            if (req.headers && req.headers.authorization) {
+              proxyRes.setHeader('access-control-allow-headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
             }
           });
         }

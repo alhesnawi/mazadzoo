@@ -30,6 +30,14 @@ export default defineConfig({
         target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
+        rewrite: (path) => path,
+        configure: (proxy, options) => {
+          proxy.on('proxyRes', (proxyRes, req, res) => {
+            if (req.headers && req.headers.authorization) {
+              proxyRes.setHeader('access-control-allow-headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+            }
+          });
+        }
       }
     }
   },

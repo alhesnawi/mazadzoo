@@ -1,7 +1,17 @@
 import config from '../config/environment.js';
 
-// API Configuration
-const API_BASE_URL = config.API_BASE_URL;
+// API Configuration - Detect if we're on Codespaces and construct the backend URL
+let API_BASE_URL = config.API_BASE_URL;
+
+// If we're on a Codespaces tunnel, extract the codespace name and construct backend URL
+if (typeof window !== 'undefined' && window.location.hostname.includes('.github.dev')) {
+  // Extract the base codespace name (e.g., "animated-barnacle-r469r755gw7xc5rjr" from "animated-barnacle-r469r755gw7xc5rjr-5174.app.github.dev")
+  const hostnameParts = window.location.hostname.split('-');
+  const codespaceName = hostnameParts.slice(0, -2).join('-');
+  if (codespaceName) {
+    API_BASE_URL = `https://${codespaceName}-5000.app.github.dev/api`;
+  }
+}
 
 // Helper function to get auth headers
 const getAuthHeaders = () => {

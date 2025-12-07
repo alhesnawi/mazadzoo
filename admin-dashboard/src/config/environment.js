@@ -1,7 +1,7 @@
 // Environment Configuration for Admin Dashboard
 export const config = {
   // API Configuration
-  API_BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  API_BASE_URL: import.meta.env.VITE_API_URL || '/api',
   
   // App Configuration
   APP_NAME: import.meta.env.VITE_APP_NAME || 'لوحة إدارة مزاد الحيوانات النادرة',
