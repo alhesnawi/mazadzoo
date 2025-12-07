@@ -3,6 +3,7 @@ const Animal = require('./models/Animal');
 const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 const config = require('./config/environment');
+const logger = require('./utils/logger');
 
 // Sample data for testing
 const sampleAnimals = [
@@ -102,40 +103,17 @@ const seedDatabase = async () => {
   try {
     // Connect to MongoDB
     await mongoose.connect(config.MONGODB_URI);
-    const logger = require('./utils/logger');
     logger.info('Connected to MongoDB');
 
-    // Find or create an admin user
-    let admin = await User.findOne({ email: 'admin@mazadzoo.com' });
-
-    if (!admin) {
-      const hashedPassword = await bcrypt.hash('admin123', 12);
-      admin = await User.create({
-        username: 'مدير النظام',
-        email: 'admin@mazadzoo.com',
-        phoneNumber: '+218911111111',
-        password: hashedPassword,
-        role: 'admin',
-        isVerified: true
-      });
-      logger.info('Created admin user with credentials - Email: admin@mazadzoo.com, Password: admin123');
-    }
-
-    // Find or create a seller user
-    let seller = await User.findOne({ email: 'seller@test.com' });
-
+    // Find existing seller user
+    let seller = await User.findOne({ role: 'seller' });
+    
     if (!seller) {
-      const hashedPassword = await bcrypt.hash('password123', 12);
-      seller = await User.create({
-        username: 'بائع تجريبي',
-        email: 'seller@test.com',
-        phoneNumber: '+218912345678',
-        password: hashedPassword,
-        role: 'seller',
-        isVerified: true
-      });
-      logger.info('Created seller user');
+      logger.error('No seller user found. Please create a seller first.');
+      return;
     }
+    
+    logger.info(`Using seller: ${seller.username}`);
 
     // Clear existing animals
     await Animal.deleteMany({});

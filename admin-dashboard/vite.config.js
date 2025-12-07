@@ -3,6 +3,9 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { fileURLToPath, URL } from 'node:url'
 
+const codespaceName = process.env.CODESPACE_NAME
+const codespaceHost = codespaceName ? `${codespaceName}-5174.app.github.dev` : undefined
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(),tailwindcss()],
@@ -14,6 +17,14 @@ export default defineConfig({
   server: {
     port: 5174,
     host: true,
+    hmr: codespaceHost
+      ? {
+          host: codespaceHost,
+          protocol: 'https',
+          clientPort: 443,
+          port: 5174,
+        }
+      : undefined,
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
