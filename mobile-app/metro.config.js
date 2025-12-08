@@ -1,11 +1,7 @@
-const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const { getDefaultConfig } = require('expo/metro-config');
 
 const config = getDefaultConfig(__dirname);
 
-const customConfig = {
-  resolver: {
-    assetExts: [...config.resolver.assetExts, 'bin', 'txt', 'jpg', 'png', 'json', 'gif', 'webp', 'svg'],
-  },
-};
+config.resolver.assetExts.push('bin', 'txt', 'jpg', 'png', 'json', 'gif', 'webp', 'svg');
 
-module.exports = mergeConfig(config, customConfig);
+module.exports = config;
