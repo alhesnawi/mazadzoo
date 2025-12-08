@@ -3,7 +3,12 @@ const isDevelopment = process.env.NODE_ENV === 'development' || __DEV__ || false
 
 export const config = {
   // API Configuration
-  API_BASE_URL: isDevelopment ? 'http://192.168.136.42:5002/api' : process.env.EXPO_PUBLIC_API_URL || 'https://api.mazadzoo.online/api',
+  // For Android emulator use: http://10.0.2.2:5000/api
+  // For iOS simulator use: http://localhost:5000/api
+  // For physical device use your computer's IP
+  API_BASE_URL: isDevelopment 
+    ? (process.env.EXPO_PUBLIC_API_URL || 'http://10.0.2.2:5000/api')
+    : (process.env.EXPO_PUBLIC_API_URL || 'https://api.mazadzoo.online/api'),
   
   // App Configuration
   APP_NAME: 'مزاد الحيوانات النادرة',
