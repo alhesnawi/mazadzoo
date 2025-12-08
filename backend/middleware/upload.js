@@ -91,14 +91,30 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Multer configuration
+// Multer configuration with improved limits
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: config.MAX_FILE_SIZE,
+    fileSize: 50 * 1024 * 1024, // 50MB max for videos
     files: 10 // Maximum 10 files
   },
   fileFilter: fileFilter
+});
+
+// Configuration for images only (smaller limit)
+const uploadImages = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB max for images
+    files: 6
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('يُسمح فقط بملفات الصور'), false);
+    }
+  }
 });
 
 // Upload configurations for different endpoints

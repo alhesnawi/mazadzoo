@@ -42,11 +42,11 @@
 }
 
 :root {
-  --radius: 0.75rem;
-  --background: #ffffff;
-  --foreground: #343a40;
+  --radius: 0.875rem;
+  --background: #f8f9fa;
+  --foreground: #1a1a1a;
   --card: #ffffff;
-  --card-foreground: #343a40;
+  --card-foreground: #1a1a1a;
   --popover: #ffffff;
   --popover-foreground: #343a40;
   --primary: #4a7c59;
@@ -115,8 +115,23 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-sans;
-    font-family: 'Inter', 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif;
+    @apply bg-background text-foreground;
+    font-family: 'Cairo', 'Tajawal', 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 500;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  
+  button {
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
   }
 }
 

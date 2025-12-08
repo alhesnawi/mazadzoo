@@ -2,11 +2,11 @@
 
 // Format currency
 export const formatCurrency = (amount, currency = 'LYD') => {
-  return new Intl.NumberFormat('ar-LY', {
-    style: 'currency',
-    currency: currency,
+  const formatted = new Intl.NumberFormat('en-US', {
+    style: 'decimal',
     minimumFractionDigits: 0
   }).format(amount);
+  return `${formatted} د.ل`;
 };
 
 // Format date
@@ -38,9 +38,9 @@ export const formatTimeRemaining = (endTime) => {
   if (days > 0) {
     return `${days} يوم ${hours} ساعة`;
   } else if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${String(hours)}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   } else {
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${String(minutes)}:${String(seconds).padStart(2, '0')}`;
   }
 };
 

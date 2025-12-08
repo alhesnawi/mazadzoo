@@ -34,7 +34,7 @@ const paymentSchema = new mongoose.Schema({
   paymentMethod: {
     type: String,
     required: [true, 'طريقة الدفع مطلوبة'],
-    enum: ['card', 'e_wallet', 'bank_transfer', 'cash', 'balance']
+    enum: ['card', 'e_wallet', 'bank_transfer', 'cash', 'balance', 'moamalat']
   },
   transactionId: {
     type: String,

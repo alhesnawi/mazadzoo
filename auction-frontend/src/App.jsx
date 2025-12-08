@@ -15,6 +15,8 @@ import './App.css'
 import HomePage from './components/HomePage'
 import LoginPage from './components/LoginPage'
 import RegisterPage from './components/RegisterPage'
+import AnimalDetailsPage from './components/AnimalDetailsPage'
+import ProfilePage from './components/ProfilePage'
 
 function App() {
 
@@ -27,6 +29,8 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/animal/:id" element={<AnimalDetailsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
             </Routes>
             <Toaster />
           </div>

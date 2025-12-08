@@ -80,7 +80,7 @@ function HomePage() {
   }
 
   const handleViewDetails = (animalId) => {
-    alert(`عرض تفاصيل الحيوان ${animalId}`)
+    navigate(`/animal/${animalId}`)
   }
 
   const handleAddToFavorites = (animalId) => {
@@ -135,7 +135,7 @@ function HomePage() {
             <nav className="flex items-center space-x-4 space-x-reverse">
               <Button variant="ghost" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>الرئيسية</Button>
               <Button variant="ghost" onClick={handleStartAuction}>المزادات</Button>
-              <Button variant="ghost" onClick={() => isAuthenticated ? alert('ميزة حسابي قيد التطوير') : handleLogin()}>حسابي</Button>
+              <Button variant="ghost" onClick={() => isAuthenticated ? navigate('/profile') : handleLogin()}>حسابي</Button>
               {isAuthenticated ? (
                 <div className="flex items-center space-x-2 space-x-reverse">
                   <span className="text-sm text-muted-foreground">مرحباً، {user?.username}</span>
@@ -254,7 +254,8 @@ function HomePage() {
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-muted-foreground">الوقت المتبقي:</span>
                       <Badge className="countdown-timer">
-                        {animal.auctionEndTime ? formatTimeRemaining(animal.auctionEndTime) : 'غير محدد'}
+                        <Clock className="h-3 w-3 ml-1" />
+                        {animal.auctionEndDate ? formatTimeRemaining(animal.auctionEndDate) : 'غير محدد'}
                       </Badge>
                     </div>
                     

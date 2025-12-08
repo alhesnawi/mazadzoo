@@ -17,7 +17,8 @@ const { protect, authorize } = require('../middleware/auth');
 const router = express.Router();
 
 // Public webhook endpoint (no authentication required)
-router.post('/webhook', handlePaymentWebhook);
+// Moamalat will POST transaction notifications here
+router.post('/webhook/moamalat', handlePaymentWebhook);
 
 // All other routes are protected
 router.use(protect);

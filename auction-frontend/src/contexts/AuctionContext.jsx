@@ -137,14 +137,43 @@ export const AuctionProvider = ({ children }) => {
     try {
       setError(null);
       
-      // Use Socket.IO for real-time bidding
-      socketService.placeBid(animalId, bidAmount);
-      
-      // Also make HTTP request for backup
+      // Make HTTP request for bidding
       const response = await bidsService.placeBid(animalId, bidAmount);
+      
+      // Update the animal in the local state
+      if (response && response.bid) {
+        // Update animals list
+        setAnimals(prevAnimals => 
+          prevAnimals.map(animal => 
+            animal._id === animalId 
+              ? { 
+                  ...animal, 
+                  currentBid: response.bid.amount,
+                  bidsCount: (animal.bidsCount || 0) + 1
+                }
+              : animal
+          )
+        );
+        
+        // Update selected animal if it's the same
+        if (selectedAnimal && selectedAnimal._id === animalId) {
+          setSelectedAnimal(prev => ({
+            ...prev,
+            currentBid: response.bid.amount,
+            bidsCount: (prev.bidsCount || 0) + 1
+          }));
+        }
+        
+        // Add the new bid to the bids list
+        setBids(prevBids => [response.bid, ...prevBids]);
+      }
+      
+      // Use Socket.IO for real-time notification to other users
+      socketService.placeBid(animalId, bidAmount);
       
       return { success: true, data: response };
     } catch (error) {
+      console.error('Bid error:', error);
       setError(error.message);
       return { success: false, message: error.message };
     }

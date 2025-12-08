@@ -4,6 +4,7 @@ const { createSendToken, generateOTP, formatPhoneNumber, sendResponse, sendError
 const logger = require('../utils/logger');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const smsService = require('../services/smsService');
 
 // @desc    Register user
 // @route   POST /api/auth/register
@@ -35,17 +36,29 @@ const register = async (req, res, next) => {
 
     // Send SMS with verification code
     try {
-      // In production, integrate with SMS service like Twilio, AWS SNS, or local provider
-      // For now, we'll use a mock implementation that logs in development
-      if (process.env.NODE_ENV === 'development') {
+      const smsResult = await smsService.sendVerificationCode(user.phoneNumber, verificationCode);
+      
+      if (smsResult.dev) {
+        // في Development mode، نعرض الكود في logs
         logger.info(`[DEV] Verification code for ${user.phoneNumber}: ${verificationCode}`);
+      }
+      
+      if (!smsResult.success) {
+        logger.warn('SMS sending failed but registration continued', {
+          phoneNumber: user.phoneNumber,
+          error: smsResult.error
+        });
       } else {
-        // TODO: Replace with actual SMS service integration
-        // Example: await sendSMS(user.phoneNumber, `Your verification code is: ${verificationCode}`);
-        logger.warn('SMS service not configured for production', { phoneNumber: user.phoneNumber });
+        logger.info('Verification SMS sent successfully', {
+          phoneNumber: user.phoneNumber
+        });
       }
     } catch (smsError) {
-      logger.error('Failed to send SMS:', { phoneNumber: user.phoneNumber, error: smsError.message, stack: smsError.stack });
+      logger.error('Failed to send SMS:', { 
+        phoneNumber: user.phoneNumber, 
+        error: smsError.message, 
+        stack: smsError.stack 
+      });
       // Don't fail registration if SMS fails, user can resend
     }
 

@@ -5,11 +5,15 @@ let API_BASE_URL = config.API_BASE_URL;
 
 // If we're on a Codespaces tunnel, extract the codespace name and construct backend URL
 if (typeof window !== 'undefined' && window.location.hostname.includes('.github.dev')) {
-  // Extract the base codespace name (e.g., "animated-barnacle-r469r755gw7xc5rjr" from "animated-barnacle-r469r755gw7xc5rjr-5174.app.github.dev")
-  const hostnameParts = window.location.hostname.split('-');
-  const codespaceName = hostnameParts.slice(0, -2).join('-');
-  if (codespaceName) {
+  // Extract the full codespace name from URL like "animated-barnacle-r469r755gw7xc5rjr-5174.app.github.dev"
+  // Remove the port part (-5174) and keep the full codespace name
+  const hostname = window.location.hostname;
+  const portMatch = hostname.match(/^(.+)-(\d+)\.app\.github\.dev$/);
+  
+  if (portMatch) {
+    const codespaceName = portMatch[1]; // e.g., "animated-barnacle-r469r755gw7xc5rjr"
     API_BASE_URL = `https://${codespaceName}-5000.app.github.dev/api`;
+    console.log('🔧 Codespaces detected - API URL:', API_BASE_URL);
   }
 }
 
@@ -36,13 +40,20 @@ const handleResponse = async (response) => {
 // Auth Service
 export const authService = {
   async login(credentials) {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(credentials)
-    });
-    
-    return handleResponse(response);
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(credentials)
+      });
+      
+      return handleResponse(response);
+    } catch (error) {
+      console.error('Login API Error:', error);
+      console.error('API URL:', API_BASE_URL);
+      throw error;
+    }
   },
 
   async getProfile() {

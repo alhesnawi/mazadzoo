@@ -52,11 +52,18 @@ const errorHandler = (err, req, res, next) => {
     error = { message, statusCode: 401 };
   }
 
-  res.status(error.statusCode || 500).json({
+  // إخفاء stack trace في production للأمان
+  const response = {
     success: false,
-    message: error.message || 'خطأ في الخادم',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
-  });
+    message: error.message || 'خطأ في الخادم'
+  };
+
+  // إضافة stack trace فقط في development mode
+  if (process.env.NODE_ENV === 'development') {
+    response.stack = err.stack;
+  }
+
+  res.status(error.statusCode || 500).json(response);
 };
 
 module.exports = errorHandler;

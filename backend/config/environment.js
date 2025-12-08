@@ -18,8 +18,22 @@ const config = {
   DOMAIN: process.env.DOMAIN || 'localhost',
   
   // CORS Configuration
-  CORS_ORIGIN: process.env.CORS_ORIGIN || ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
-  SOCKET_CORS_ORIGIN: process.env.SOCKET_CORS_ORIGIN || ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
+  CORS_ORIGIN: process.env.CORS_ORIGIN || [
+    'http://localhost:5173', 
+    'http://localhost:5174', 
+    'http://localhost:5175',
+    'https://animated-barnacle-r469r755gw7xc5rjr-5173.app.github.dev',
+    'https://animated-barnacle-r469r755gw7xc5rjr-5174.app.github.dev',
+    'https://animated-barnacle-r469r755gw7xc5rjr-5175.app.github.dev'
+  ],
+  SOCKET_CORS_ORIGIN: process.env.SOCKET_CORS_ORIGIN || [
+    'http://localhost:5173', 
+    'http://localhost:5174', 
+    'http://localhost:5175',
+    'https://animated-barnacle-r469r755gw7xc5rjr-5173.app.github.dev',
+    'https://animated-barnacle-r469r755gw7xc5rjr-5174.app.github.dev',
+    'https://animated-barnacle-r469r755gw7xc5rjr-5175.app.github.dev'
+  ],
   
   // Rate Limiting
   RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 900000, // 15 minutes

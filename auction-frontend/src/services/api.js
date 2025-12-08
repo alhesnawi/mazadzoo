@@ -6,11 +6,14 @@ let API_BASE_URL = config.API_BASE_URL;
 
 // If we're on a Codespaces tunnel, extract the codespace name and construct backend URL
 if (typeof window !== 'undefined' && window.location.hostname.includes('.github.dev')) {
-  // Extract the base codespace name (e.g., "animated-barnacle-r469r755gw7xc5rjr" from "animated-barnacle-r469r755gw7xc5rjr-5173.app.github.dev")
-  const hostnameParts = window.location.hostname.split('-');
-  const codespaceName = hostnameParts.slice(0, -2).join('-');
-  if (codespaceName) {
+  // Extract the full codespace name from URL like "animated-barnacle-r469r755gw7xc5rjr-5173.app.github.dev"
+  const hostname = window.location.hostname;
+  const portMatch = hostname.match(/^(.+)-(\d+)\.app\.github\.dev$/);
+  
+  if (portMatch) {
+    const codespaceName = portMatch[1]; // e.g., "animated-barnacle-r469r755gw7xc5rjr"
     API_BASE_URL = `https://${codespaceName}-5000.app.github.dev/api`;
+    console.log('🔧 Codespaces detected - API URL:', API_BASE_URL);
   }
 }
 
@@ -161,7 +164,7 @@ export const bidsService = {
       headers: getAuthHeaders(),
       body: JSON.stringify({
         animalId,
-        amount: bidAmount
+        bidAmount: bidAmount
       })
     });
     

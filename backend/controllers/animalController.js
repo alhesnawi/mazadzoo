@@ -394,11 +394,23 @@ const createAnimalValidation = [
     .withMessage('سعر الافتتاح يجب أن يكون أكبر من صفر'),
   body('reservePrice')
     .isFloat({ min: 1 })
-    .withMessage('سعر التحفظ يجب أن يكون أكبر من صفر'),
+    .withMessage('سعر التحفظ يجب أن يكون أكبر من صفر')
+    .custom((value, { req }) => {
+      if (value < req.body.startPrice) {
+        throw new Error('سعر التحفظ يجب أن يكون أكبر من أو يساوي سعر الافتتاح');
+      }
+      return true;
+    }),
   body('buyItNowPrice')
     .optional()
     .isFloat({ min: 1 })
     .withMessage('سعر الشراء الفوري يجب أن يكون أكبر من صفر')
+    .custom((value, { req }) => {
+      if (value && req.body.reservePrice && value < req.body.reservePrice) {
+        throw new Error('سعر الشراء الفوري يجب أن يكون أكبر من أو يساوي سعر التحفظ');
+      }
+      return true;
+    })
 ];
 
 const updateAnimalValidation = [

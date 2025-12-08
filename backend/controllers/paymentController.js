@@ -16,43 +16,39 @@ const addFunds = async (req, res, next) => {
       return sendError(res, 400, 'بيانات غير صحيحة', errors.array());
     }
 
-    const { amount, paymentMethod } = req.body;
+    const { amount } = req.body;
     const userId = req.user.id;
 
+    // Validate amount (minimum 1 LYD = 1000 smallest unit)
+    if (amount < 1000) {
+      return sendError(res, 400, 'الحد الأدنى للإيداع هو 1 دينار ليبي');
+    }
+
     // Create payment record
+    const transactionId = generateTransactionId();
     const payment = await Payment.create({
       userId,
-      amount,
+      amount: amount / 1000, // Convert to LYD (from smallest unit)
       type: 'deposit',
       status: 'pending',
-      paymentMethod,
-      transactionId: generateTransactionId(),
+      paymentMethod: 'moamalat',
+      transactionId,
       description: 'إضافة رصيد إلى المحفظة'
     });
 
-    // Initiate payment with Moamalat
-    const paymentResult = await moamalatService.createPayment(
-      amount,
-      'LYD',
-      'إضافة رصيد إلى المحفظة',
-      payment.transactionId
-    );
+    // Generate Moamalat payment configuration
+    const paymentConfig = moamalatService.generatePaymentConfig(amount, transactionId);
 
-    if (!paymentResult.success) {
-      payment.status = 'failed';
-      payment.errorMessage = paymentResult.error;
-      await payment.save();
-      return sendError(res, 400, 'فشل في إنشاء طلب الدفع: ' + paymentResult.error);
-    }
-
-    // Update payment with gateway details
-    payment.gatewayTransactionId = paymentResult.transactionId;
-    payment.paymentUrl = paymentResult.paymentUrl;
-    await payment.save();
-
-    await payment.populate('userId', 'username email');
-
-    sendResponse(res, 201, true, 'تم إضافة الرصيد بنجاح', { payment, newBalance: user.balance });
+    // Return config for frontend Lightbox
+    sendResponse(res, 200, true, 'تم إنشاء طلب الدفع بنجاح', { 
+      payment: {
+        _id: payment._id,
+        transactionId: payment.transactionId,
+        amount: payment.amount,
+        status: payment.status
+      },
+      moamalat: paymentConfig 
+    });
   } catch (error) {
     next(error);
   }
@@ -387,46 +383,82 @@ const getPaymentStats = async (req, res, next) => {
 // @desc    Handle Moamalat payment webhook
 // @route   POST /api/payments/webhook
 // @access  Public
+// @desc    Handle Moamalat webhook notifications
+// @route   POST /api/payments/webhook/moamalat
+// @access  Public (with signature verification)
 const handlePaymentWebhook = async (req, res, next) => {
   try {
     const webhookData = req.body;
 
-    // Verify webhook with Moamalat service
-    const verification = moamalatService.handleWebhook(webhookData);
+    // Verify webhook signature with Moamalat service
+    const verification = moamalatService.verifyWebhookNotification(webhookData);
 
     if (!verification.valid) {
-      return sendError(res, 400, 'Invalid webhook signature');
+      return res.status(400).json({ 
+        Message: 'Invalid webhook signature',
+        Success: false 
+      });
     }
 
-    // Find and update payment
+    const { data } = verification;
+
+    // Find payment by merchant reference (our transactionId)
     const payment = await Payment.findOne({
-      gatewayTransactionId: verification.transactionId
+      transactionId: data.merchantReference
     });
 
     if (!payment) {
-      return sendError(res, 404, 'Payment not found');
+      // Return success even if payment not found (idempotency)
+      return res.status(200).json({ 
+        Message: 'Payment not found, but webhook accepted',
+        Success: true 
+      });
     }
 
-    // Update payment status based on webhook
-    if (verification.status === 'completed' && payment.status === 'pending') {
+    // Update payment with Moamalat details
+    payment.gatewayTransactionId = data.networkReference;
+    payment.gatewayResponse = {
+      systemReference: data.systemReference,
+      networkReference: data.networkReference,
+      actionCode: data.actionCode,
+      message: data.message,
+      payerAccount: data.payerAccount,
+      payerName: data.payerName,
+      paidThrough: data.paidThrough,
+      dateTimeLocalTrxn: data.dateTimeLocalTrxn
+    };
+
+    // Update payment status based on approval
+    if (data.isApproved && payment.status === 'pending') {
       payment.status = 'completed';
 
       // Add funds to user balance for deposit payments
       if (payment.type === 'deposit') {
         const user = await User.findById(payment.userId);
-        user.balance += payment.amount;
-        await user.save();
+        if (user) {
+          user.balance += payment.amount;
+          await user.save();
+        }
       }
-    } else if (verification.status === 'failed') {
+    } else if (!data.isApproved) {
       payment.status = 'failed';
-      payment.errorMessage = 'Payment failed';
+      payment.errorMessage = data.message || 'Payment declined';
     }
 
     await payment.save();
 
-    sendResponse(res, 200, true, 'Webhook processed successfully');
+    // Return Moamalat expected response format
+    return res.status(200).json({ 
+      Message: 'Success', 
+      Success: true 
+    });
   } catch (error) {
-    next(error);
+    console.error('Webhook processing error:', error);
+    // Return success to prevent Moamalat retries on our errors
+    return res.status(200).json({ 
+      Message: 'Error processed', 
+      Success: true 
+    });
   }
 };
 
@@ -493,11 +525,8 @@ const processRefund = async (req, res, next) => {
 // Validation rules
 const addFundsValidation = [
   body('amount')
-    .isFloat({ min: 1 })
-    .withMessage('المبلغ يجب أن يكون أكبر من صفر'),
-  body('paymentMethod')
-    .isIn(['card', 'e_wallet', 'bank_transfer'])
-    .withMessage('طريقة الدفع غير صحيحة')
+    .isInt({ min: 1000 })
+    .withMessage('المبلغ يجب أن يكون 1000 على الأقل (1 دينار ليبي)')
 ];
 
 const withdrawFundsValidation = [
