@@ -45,6 +45,7 @@
       "googleServicesFile": "./GoogleService-Info.plist"
     },
     "plugins": [
+      "react-native-reanimated/plugin",
       [
         "expo-image-picker",
         {
@@ -71,6 +72,7 @@
       "eas": {
         "projectId": "6802fdde-d4be-4ca5-8ef3-b20dfd7bfdec"
       }
-    }
+    },
+    "scheme": "mazadzoo"
   }
 }
