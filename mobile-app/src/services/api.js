@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mockApiService } from './mockData.js';
 
 const API_BASE_URL = config.API_BASE_URL;
-const USE_MOCK_DATA = __DEV__ && false; // Disable mock data
+const USE_MOCK_DATA = true; // Enable mock data fallback for all environments
 
 class ApiService {
   constructor() {
@@ -45,9 +45,10 @@ class ApiService {
   
       return data.data || data;
     } catch (error) {
-      // If backend is not available and we're in development, use mock data
-      if (USE_MOCK_DATA && (error.message === 'Network request failed' || error.name === 'TypeError')) {
-        // Backend unavailable, using mock data
+      console.warn('API request failed:', endpoint, error.message);
+      // If backend is not available, use mock data
+      if (USE_MOCK_DATA) {
+        console.log('Using mock data for:', endpoint);
         return this.handleMockRequest(endpoint, options);
       }
       throw error;

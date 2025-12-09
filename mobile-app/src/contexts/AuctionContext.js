@@ -1,7 +1,19 @@
 // src/contexts/AuthContext.js
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { auth, isFirebaseAvailable, getFirebaseErrorMessage } from '../config/firebase';
+
+let auth = null;
+let isFirebaseAvailable = () => false;
+let getFirebaseErrorMessage = (e) => e.message;
+
+try {
+  const firebaseModule = require('../config/firebase');
+  auth = firebaseModule.auth;
+  isFirebaseAvailable = firebaseModule.isFirebaseAvailable;
+  getFirebaseErrorMessage = firebaseModule.getFirebaseErrorMessage;
+} catch (error) {
+  console.warn('Firebase not available:', error.message);
+}
 
 const AuthContext = createContext({});
 
